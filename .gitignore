@@ -1,0 +1,23 @@
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Python cache/build files
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Sensitive or generated model/data artifacts
+backend/models/*.pkl
+backend/data/
+
+# OS/editor files
+.DS_Store
+.vscode/
