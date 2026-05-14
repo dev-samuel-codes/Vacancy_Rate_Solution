@@ -14,4 +14,3 @@ test: 테스트 코드 추가 또는 수정
 chore: 빌드나 패키지 관련 설정 변경
 ci: CI(Continuous Integration, 지속적 통합) 관련 변경사항 (예: GitHub Actions 설정 수정)
 ---
-메세지를 작성할 때는 타입만 영어로 작성하고 제목은 한국어로 작성해
