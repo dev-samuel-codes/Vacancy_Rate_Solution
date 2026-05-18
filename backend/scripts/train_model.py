@@ -41,26 +41,8 @@ def vacancy_model(x_train, y_train, x_test, y_test, x_val, y_val, columns):
 
     model.fit(x_train, y_train)
 
-    train_pred = model.predict(x_train)
     val_pred = model.predict(x_val)
     test_pred = model.predict(x_test)
-
-    plt.figure(figsize=(8, 6))
-
-    plt.scatter(y_train, train_pred, alpha=0.2, label="Train")
-    plt.scatter(y_val, val_pred, alpha=0.3, label="Validation")
-    plt.scatter(y_test, test_pred, alpha=0.3, label="Test")
-
-    min_value = min(y_train.min(), y_val.min(), y_test.min())
-    max_value = max(y_train.max(), y_val.max(), y_test.max())
-
-    plt.plot([min_value, max_value], [min_value, max_value], color="red")
-
-    plt.xlabel("Actual Vacancy Rate")
-    plt.ylabel("Predicted Vacancy Rate")
-    plt.title("Actual vs Predicted Vacancy Rate")
-    plt.legend()
-    plt.show()
     
     print("검증 MAE:", mean_absolute_error(y_val, val_pred))
     print("검증 R2:", r2_score(y_val, val_pred))
@@ -81,3 +63,7 @@ def vacancy_model(x_train, y_train, x_test, y_test, x_val, y_val, columns):
     )
 
 vacancy_model(x_train, y_train, x_test, y_test, x_val, y_val, x.columns.tolist())
+
+def display():
+    model = joblib.load("backend/models/model.pkl")
+
