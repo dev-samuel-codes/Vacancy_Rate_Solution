@@ -64,6 +64,27 @@ def vacancy_model(x_train, y_train, x_test, y_test, x_val, y_val, columns):
 
 vacancy_model(x_train, y_train, x_test, y_test, x_val, y_val, x.columns.tolist())
 
-def display():
+# 그래프로 확인
+def display(x_train, y_train, x_val, y_val, x_test, y_test):
     model = joblib.load("backend/models/model.pkl")
 
+    train_pred = model.predict(x_train)
+    val_pred = model.predict(x_val)
+    test_pred = model.predict(x_test)
+
+    plt.figure(figsize=(8, 6))
+
+    plt.scatter(y_train, train_pred, alpha=0.2, label="Train")
+    plt.scatter(y_val, val_pred, alpha=0.3, label="Validation")
+    plt.scatter(y_test, test_pred, alpha=0.3, label="Test")
+
+    min_value = min(y_train.min(), y_val.min(), y_test.min())
+    max_value = max(y_train.max(), y_val.max(), y_test.max())
+
+    plt.plot([min_value, max_value], [min_value, max_value], color="red")
+
+    plt.xlabel("Actual Vacancy Rate")
+    plt.ylabel("Predicted Vacancy Rate")
+    plt.title("Actual vs Predicted Vacancy Rate")
+    plt.legend()
+    plt.show()
