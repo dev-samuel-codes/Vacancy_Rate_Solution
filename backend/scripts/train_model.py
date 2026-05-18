@@ -27,4 +27,10 @@ x = data.drop(columns=[target_column])
 y = data[target_column]
 
 # 훈련데이터와 테스트데이터 분리
-x_train, x_test, y_train, y_test = train_test_split(x, y, stratify=y, test_size=0.2)
+x_train, x_test, y_train, y_test = train_test_split(x, y, stratify=y, test_size=0.2, random_state=42)
+
+# 표준화
+scaler = StandardScaler()
+scaler.fit(x_train)
+train_scaled = scaler.transform(x_train)
+test_scaled = scaler.transform(x_test)
