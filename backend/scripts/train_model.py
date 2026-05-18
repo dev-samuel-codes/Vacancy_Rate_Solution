@@ -1,3 +1,4 @@
+import joblib
 import pandas as pd
 
 from sklearn.model_selection import train_test_split
@@ -32,10 +33,20 @@ train_scaled = scaler.fit_transform(x_train)
 test_scaled = scaler.transform(x_test)
 
 # 로지스틱 회귀 모델
-def logistic_model(train_scaled, y_train, test_scaled, y_test):
+def logistic_model(train_scaled, y_train, test_scaled, y_test, scaler, columns):
     sc = SGDClassifier(loss='log_loss', random_state=42)
     sc.fit(train_scaled, y_train)
     print("훈련데이터성능: ", sc.score(train_scaled, y_train))
     print("테스트데이터성능: ", sc.score(test_scaled, y_test))
 
-logistic_model(train_scaled, y_train, test_scaled, y_test)
+    # 모델 저장
+    joblib.dump(sc, "backend/models/model.pkl")
+    joblib.dump(
+        {
+            "scaler": scaler,
+            "columns": columns
+        },
+    "backend/models/preprocessor.pkl"
+    )
+
+logistic_model(train_scaled, y_train, test_scaled, y_test, scaler, x.columns.tolist())
