@@ -2,6 +2,8 @@ import keras
 
 import pandas as pd
 import numpy as np
+
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import SGDClassifier
 
@@ -23,3 +25,6 @@ target_column = "target_survived_over_1_year"
 
 x = data.drop(columns=[target_column])
 y = data[target_column]
+
+# 훈련데이터와 테스트데이터 분리
+x_train, x_test, y_train, y_test = train_test_split(x, y, stratify=y, test_size=0.2)
