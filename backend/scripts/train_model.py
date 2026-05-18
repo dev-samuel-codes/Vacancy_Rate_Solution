@@ -46,7 +46,7 @@ def logistic_model(train_scaled, y_train, test_scaled, y_test, scaler, columns):
             "scaler": scaler,
             "columns": columns
         },
-    "backend/models/preprocessor.pkl"
+        "backend/models/preprocessor.pkl"
     )
 
 logistic_model(train_scaled, y_train, test_scaled, y_test, scaler, x.columns.tolist())
