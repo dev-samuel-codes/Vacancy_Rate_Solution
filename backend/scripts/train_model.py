@@ -1,9 +1,10 @@
 import joblib
 import pandas as pd
 
+from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import SGDClassifier
+from sklearn.metrics import mean_absolute_error, r2_score
+
 
 # 파일 불러오기
 data = pd.read_csv("backend/data/survival_model_dataset.csv")
@@ -19,37 +20,45 @@ data = pd.get_dummies(
 )
 
 # 특성값과 타깃값 설정
-target_column = "target_survived_over_1_year"
+target_column = "vacancy_rate"
 
-x = data.drop(columns=[target_column])
+x = data.drop(columns=[target_column, "target_survived_over_1_year"])
 y = data[target_column]
 
 # 훈련데이터와 테스트데이터 분리
-x_train, x_test, y_train, y_test = train_test_split(x, y, stratify=y, test_size=0.2, random_state=42)
-x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, stratify=y_train, test_size=0.2, random_state=42)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2, random_state=42)
 
-# 표준화
-scaler = StandardScaler()
-train_scaled = scaler.fit_transform(x_train)
-val_scaled = scaler.transform(x_val)
-test_scaled = scaler.transform(x_test)
-
-# 로지스틱 회귀 모델
-def logistic_model(train_scaled, y_train, val_scaled, y_val, test_scaled, y_test, scaler, columns):
-    sc = SGDClassifier(loss='log_loss', random_state=42)
-    sc.fit(train_scaled, y_train)
-    print("훈련데이터 성능: ", sc.score(train_scaled, y_train))
-    print("검증데이터 성능", sc.score(val_scaled, y_val))
-    print("테스트데이터 성능: ", sc.score(test_scaled, y_test))
-
-    # 모델 저장
-    joblib.dump(sc, "backend/models/model.pkl")
-    joblib.dump(
-        {
-            "scaler": scaler,
-            "columns": columns
-        },
-        "backend/models/preprocessor.pkl"
+# 공실률 예측 회귀 모델 학습
+def vacancy_model(x_train, y_train, x_test, y_test, x_val, y_val, columns):
+    model = HistGradientBoostingRegressor(
+        learning_rate=0.05,
+        max_iter=300,
+        max_leaf_nodes=31,
+        random_state=42
     )
 
-logistic_model(train_scaled, y_train, val_scaled, y_val, test_scaled, y_test, scaler, x.columns.tolist())
+    model.fit(x_train, y_train)
+
+    val_pred = model.predict(x_val)
+    test_pred = model.predict(x_test)
+
+    print("검증 MAE:", mean_absolute_error(y_val, val_pred))
+    print("검증 R2:", r2_score(y_val, val_pred))
+
+    print("테스트 MAE:", mean_absolute_error(y_test, test_pred))
+    print("테스트 R2:", r2_score(y_test, test_pred))
+
+    # 학습 모델 저장
+    joblib.dump(model, "backend/models/model.pkl")
+    joblib.dump(
+        {
+            "columns": columns,
+            "drop_columns": ["period", "region", "target_survived_over_1_year"],
+            "categorical_columns": ["district", "business_type"],
+            "target_column": "vacancy_rate"
+        },
+       "backend/models/preprocessor.pkl"
+    )
+
+vacancy_model(x_train, y_train, x_test, y_test, x_val, y_val, x.columns.tolist())
