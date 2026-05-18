@@ -19,6 +19,13 @@ env/
 backend/models/*.pkl
 backend/data/
 
+# Local data-source and collection scripts
+backend/app/data_sources.py
+backend/data_source_notes.md
+backend/data_scurce_notes.md
+backend/scripts/*
+!backend/scripts/train_model.py
+
 # OS/editor files
 .DS_Store
 .vscode/
