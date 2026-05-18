@@ -25,6 +25,11 @@ backend/data_source_notes.md
 backend/scripts/*
 !backend/scripts/train_model.py
 
+# Local test scripts
+backend/tests/test_build_survival_model_dataset.py
+backend/tests/test_collect_seoul_data.py
+backend/tests/test_collect_seoul_floating_population.py
+
 # OS/editor files
 .DS_Store
 .vscode/
