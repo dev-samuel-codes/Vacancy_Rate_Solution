@@ -1,7 +1,4 @@
-import keras
-
 import pandas as pd
-import numpy as np
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -34,3 +31,12 @@ scaler = StandardScaler()
 scaler.fit(x_train)
 train_scaled = scaler.transform(x_train)
 test_scaled = scaler.transform(x_test)
+
+# 로지스틱 회귀 모델
+def logistic_model(train_scaled, y_train, test_scaled, y_test):
+    sc = SGDClassifier(loss='log_loss', random_state=42)
+    sc.fit(train_scaled, y_train)
+    print("훈련데이터성능: ", sc.score(train_scaled, y_train))
+    print("테스트데이터성능: ", sc.score(test_scaled, y_test))
+
+logistic_model()
