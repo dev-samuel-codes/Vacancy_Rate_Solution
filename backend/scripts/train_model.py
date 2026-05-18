@@ -28,8 +28,7 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, stratify=y, test_size=
 
 # 표준화
 scaler = StandardScaler()
-scaler.fit(x_train)
-train_scaled = scaler.transform(x_train)
+train_scaled = scaler.fit_transform(x_train)
 test_scaled = scaler.transform(x_test)
 
 # 로지스틱 회귀 모델
@@ -39,4 +38,4 @@ def logistic_model(train_scaled, y_train, test_scaled, y_test):
     print("훈련데이터성능: ", sc.score(train_scaled, y_train))
     print("테스트데이터성능: ", sc.score(test_scaled, y_test))
 
-logistic_model()
+logistic_model(train_scaled, y_train, test_scaled, y_test)
